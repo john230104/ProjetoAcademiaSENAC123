@@ -1664,6 +1664,7 @@
             this.btnCadFunAlterar.TabIndex = 11;
             this.btnCadFunAlterar.Text = "Alterar";
             this.btnCadFunAlterar.UseVisualStyleBackColor = true;
+            this.btnCadFunAlterar.Click += new System.EventHandler(this.btnCadFunAlterar_Click);
             // 
             // btnCadFunLimpar
             // 

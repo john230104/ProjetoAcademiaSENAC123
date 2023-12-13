@@ -108,8 +108,8 @@ namespace Projeto_Academia_SENAC
             mktCadAluCPF.Clear();
             mktCadAluDataCadastro.Clear();
             mktCadAluDataNasc.Clear();
-            cmbCadAluCidade.SelectedItem = String.Empty;
-            cmbCadAluEstado.SelectedItem = String.Empty;
+            cmbCadAluCidade.Text = String.Empty;
+            cmbCadAluEstado.Text = String.Empty;
             // Tbl Produtos
             txtCadProCodigo.Clear();
             txtCadProDescricao.Clear();
@@ -130,8 +130,8 @@ namespace Projeto_Academia_SENAC
             txtCadForNumero.Clear();
             txtCadForComplemento.Clear();
             txtCadForBairro.Clear();
-            cmbCadForCidade.SelectedItem = String.Empty;
-            cmbCadForEstado.SelectedItem = String.Empty;
+            cmbCadForCidade.Text = String.Empty;
+            cmbCadForEstado.Text = String.Empty;
             // Tbl Terceirizados
             txtCadTerRazaoSocial.Clear();
             txtCadTerCNPJ.Clear();
@@ -144,8 +144,8 @@ namespace Projeto_Academia_SENAC
             txtCadTerNumero.Clear();
             txtCadTerComplemento.Clear();
             txtCadTerBairro.Clear();
-            cmbCadTerCidade.SelectedItem = String.Empty;
-            cmbCadTerEstado.SelectedItem = String.Empty;
+            cmbCadTerCidade.Text = String.Empty;
+            cmbCadTerEstado.Text = String.Empty;
             // Tbl Funcionarios
             txtCadFunNome.Clear();
             txtCadFunCodigo.Clear();
@@ -159,9 +159,9 @@ namespace Projeto_Academia_SENAC
             txtCadFunNumero.Clear();
             txtCadFunComplemento.Clear();
             txtCadFunBairro.Clear();
-            cmbCadFunCargo.SelectedItem = String.Empty;
-            cmbCadFunCidade.SelectedItem = String.Empty;
-            cmbCadFunEstado.SelectedItem = String.Empty;
+            cmbCadFunCargo.Text = String.Empty;
+            cmbCadFunCidade.Text = String.Empty;
+            cmbCadFunEstado.Text = String.Empty;
             // Tbl Equipamentos
             txtCadEqIdentificacao.Clear();
             txtCadEqModelo.Clear();
@@ -214,35 +214,196 @@ namespace Projeto_Academia_SENAC
             LimparDados();
         }
 
-        private void btnCadAluPesquisar_Click(object sender, EventArgs e)
+        private void PesquisaAlunos(string cpf)
         {
-            Alunos.Codigo = "";
-            frmCadastro pesq = new frmCadastro();
-            pesq.ShowDialog();
-            if (Alunos.Codigo != "")
-            {
-                txtCadAluNome.Text = Alunos.Nome;
-                mktCadAluCPF.Text = Alunos.Email;
-                mktCadAluCelular.Text = Alunos.Celular;
-                mktCadAluDataNasc.Text = Alunos.Profissao;
-                mktCadAluDataCadastro.Text = Alunos.CEP;
-                mktCadAluCEP.Text = Alunos.Estado;
-                cmbCadAluEstado.Text = Alunos.Cidade;
-                cmbCadAluCidade.Text = Alunos.Rua;
-                txtCadAluRua.Text = Alunos.Numero;
-                txtCadAluNumero.Text = Alunos.Complemento;
-                txtCadAluComplemento.Text = Alunos.Bairro;
-                txtCadAluBairro.Text = Alunos.Bairro;
 
-                // Habilitar os botões Alterar e Excluir
-                btnCadAluAlterar.Enabled = true;
-                btnCadAluApagar.Enabled = true;
-                // Desabilita o botão Cadastrar
-                btnCadAluCadastrar.Enabled = false;
+            if (!string.IsNullOrEmpty(cpf))
+            {
+                Conexao.Conectar();
+                string query = "SELECT * FROM Alunos WHERE Alu_CPF = @cpf";
+
+                using (SqlCommand command = new SqlCommand(query, Conexao.conn))
+                {
+                    command.Parameters.AddWithValue("@cpf", cpf);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            PreencherAlunos(reader);
+                        }
+                    }
+                }
             }
-            frmAlunos outroform = new frmAlunos();
-            this.Hide();
-            outroform.ShowDialog();
+        }
+
+        private void PesquisaProdutos(string codigo)
+        {
+
+            if (!string.IsNullOrEmpty(codigo))
+            {
+                Conexao.Conectar();
+                string query = "SELECT * FROM Produtos WHERE Pro_Codigo = @codigo";
+
+                using (SqlCommand command = new SqlCommand(query, Conexao.conn))
+                {
+                    command.Parameters.AddWithValue("@codigo", codigo);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            PreencherProdutos(reader);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PesquisaFornecedores(string codigof)
+        {
+
+            if (!string.IsNullOrEmpty(codigof))
+            {
+                Conexao.Conectar();
+                string query = "SELECT * FROM Fornecedores WHERE For_Codigo = @codigof";
+
+                using (SqlCommand command = new SqlCommand(query, Conexao.conn))
+                {
+                    command.Parameters.AddWithValue("@codigof", codigof);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            PreencherFornecedores(reader);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PesquisaFuncionarios(string codigofu)
+        {
+
+            if (!string.IsNullOrEmpty(codigofu))
+            {
+                Conexao.Conectar();
+                string query = "SELECT * FROM Funcionarios WHERE Fun_Codigo = @codigofu";
+
+                using (SqlCommand command = new SqlCommand(query, Conexao.conn))
+                {
+                    command.Parameters.AddWithValue("@codigofu", codigofu);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            PreencherFuncionarios(reader);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private void PreencherAlunos(SqlDataReader reader)
+        {
+            txtCadAluNome.Text = reader["Alu_Nome"].ToString();
+            mktCadAluDataNasc.Text = reader["Alu_DataNascimento"].ToString();
+            mktCadAluDataCadastro.Text = reader["Alu_DataCadastro"].ToString();
+            mktCadAluCelular.Text = reader["Alu_Celular"].ToString();
+            txtCadAluEmail.Text = reader["Alu_Email"].ToString();
+            mktCadAluCEP.Text = reader["Alu_CEP"].ToString();
+            txtCadAluRua.Text = reader["Alu_Rua"].ToString();
+            txtCadAluComplemento.Text = reader["Alu_Complemento"].ToString();
+            txtCadAluNumero.Text = reader["Alu_Numero"].ToString();
+            txtCadAluBairro.Text = reader["Alu_Bairro"].ToString();
+            cmbCadAluCidade.Text = reader["Alu_Cidade"].ToString();
+            cmbCadAluEstado.Text = reader["Alu_Estado"].ToString();
+        }
+
+        private void PreencherFuncionarios(SqlDataReader reader)
+        {
+            txtCadFunNome.Text = reader["Fun_Nome"].ToString();
+            mktCadFunCPF.Text = reader["Fun_CPF"].ToString();
+            txtCadFunEmail.Text = reader["Fun_Email"].ToString();
+            mktCadFunCelular.Text = reader["Fun_Celular"].ToString();
+            mktCadFunDataNasc.Text = reader["Fun_DataNascimento"].ToString();
+            mktCadFunDataInicio.Text = reader["Fun_DataInicio"].ToString();
+            cmbCadFunCargo.Text = reader["Fun_Cargo"].ToString();
+            mktCadFunCEP.Text = reader["Fun_CEP"].ToString();
+            cmbCadFunEstado.Text = reader["Fun_Estado"].ToString();
+            cmbCadFunCidade.Text = reader["Fun_Cidade"].ToString();
+            txtCadFunRua.Text = reader["Fun_Rua"].ToString();
+            txtCadFunNumero.Text = reader["Fun_Numero"].ToString();
+            txtCadFunComplemento.Text = reader["Fun_Complemento"].ToString();
+            txtCadFunBairro.Text = reader["Fun_Bairro"].ToString();
+        }
+
+        private void PreencherFornecedores(SqlDataReader reader)
+        {
+            txtCadForRazaoSocial.Text = reader["For_Razao"].ToString();
+            txtCadForCNPJ.Text = reader["For_CNPJ"].ToString();
+            txtCadForContato.Text = reader["For_Contato"].ToString();
+            txtCadForEmail.Text = reader["For_Email"].ToString();
+            mktCadForFone.Text = reader["For_Fone"].ToString();
+            mktCadForCEP.Text = reader["For_CEP"].ToString();
+            cmbCadForEstado.Text = reader["For_Estado"].ToString();
+            cmbCadForCidade.Text = reader["For_Cidade"].ToString();
+            txtCadForRua.Text = reader["For_Rua"].ToString();
+            txtCadForNumero.Text = reader["For_Numero"].ToString();
+            txtCadForComplemento.Text = reader["For_Complemento"].ToString();
+            txtCadForBairro.Text = reader["For_Bairro"].ToString();
+        }
+
+        private void PreencherProdutos(SqlDataReader reader)
+        {
+            txtCadProQuantidade.Text = reader["Pro_Quantidade"].ToString();
+            txtCadProDescricao.Text = reader["Pro_Descricao"].ToString();
+            txtCadProFornecedor.Text = reader["Pro_Fornecedor"].ToString();
+            txtCadProFabricante.Text = reader["Pro_Fabricante"].ToString();
+            mktCadProValidade.Text = reader["Pro_Validade"].ToString();
+            txtCadProValorUni.Text = reader["Pro_ValorUnitario"].ToString();
+        }
+        private void btnCadAluPesquisar_Click(object sender, EventArgs e)
+        {   
+            if (mktCadAluCPF.Text.Replace(",","").Replace("-","").Replace(" ","") == "")
+            {
+                frmAlunos outroform = new frmAlunos();
+                this.Hide();
+                outroform.ShowDialog();
+            }
+            else
+            {
+                PesquisaAlunos(mktCadAluCPF.Text);
+            }
+            //Alunos.Codigo = "";
+            //frmCadastro pesq = new frmCadastro();
+            //pesq.ShowDialog();
+            //if (Alunos.Codigo != "")
+            //{
+            //    txtCadAluNome.Text = Alunos.Nome;
+            //    mktCadAluCPF.Text = Alunos.Email;
+            //    mktCadAluCelular.Text = Alunos.Celular;
+            //    mktCadAluDataNasc.Text = Alunos.Profissao;
+            //    mktCadAluDataCadastro.Text = Alunos.CEP;
+            //    mktCadAluCEP.Text = Alunos.Estado;
+            //    cmbCadAluEstado.Text = Alunos.Cidade;
+            //    cmbCadAluCidade.Text = Alunos.Rua;
+            //    txtCadAluRua.Text = Alunos.Numero;
+            //    txtCadAluNumero.Text = Alunos.Complemento;
+            //    txtCadAluComplemento.Text = Alunos.Bairro;
+            //    txtCadAluBairro.Text = Alunos.Bairro;
+
+            //    // Habilitar os botões Alterar e Excluir
+            //    btnCadAluAlterar.Enabled = true;
+            //    btnCadAluApagar.Enabled = true;
+            //    // Desabilita o botão Cadastrar
+            //    btnCadAluCadastrar.Enabled = false;
+            //}
+            
+
         }
 
         private void btnCadProVoltar_Click(object sender, EventArgs e)
@@ -256,9 +417,17 @@ namespace Projeto_Academia_SENAC
 
         private void btnCadProPesquisar_Click(object sender, EventArgs e)
         {
-            frmProdutos outroform = new frmProdutos();
-            this.Hide();
-            outroform.ShowDialog();
+            if (txtCadProCodigo.Text == "")
+            {
+                frmAlunos outroform = new frmAlunos();
+                this.Hide();
+                outroform.ShowDialog();
+            }
+            else
+            {
+                PesquisaProdutos(txtCadProCodigo.Text);
+            }
+            
         }
 
         private void btnCadProLimpar_Click(object sender, EventArgs e)
@@ -268,9 +437,16 @@ namespace Projeto_Academia_SENAC
 
         private void btnCadForPesquisar_Click(object sender, EventArgs e)
         {
-            frmFornecedores outroform = new frmFornecedores();
-            this.Hide();
-            outroform.ShowDialog();
+            if (txtCadForCodigo.Text == "")
+            {
+                frmFornecedores outroform = new frmFornecedores();
+                this.Hide();
+                outroform.ShowDialog();
+            }
+            else
+            {
+                PesquisaFornecedores(txtCadForCodigo.Text);
+            }
         }
 
         private void btnCadForVoltar_Click(object sender, EventArgs e)
@@ -315,9 +491,16 @@ namespace Projeto_Academia_SENAC
 
         private void btnCadFunPesquisar_Click(object sender, EventArgs e)
         {
-            frmFuncionarios outroform = new frmFuncionarios();
-            this.Hide();
-            outroform.ShowDialog();
+            if (txtCadFunCodigo.Text == "")
+            {
+                frmFuncionarios outroform = new frmFuncionarios();
+                this.Hide();
+                outroform.ShowDialog();
+            }
+            else
+            {
+                PesquisaFuncionarios(txtCadFunCodigo.Text);
+            }
         }
 
         private void btnCadFunVoltar_Click(object sender, EventArgs e)
@@ -412,8 +595,10 @@ namespace Projeto_Academia_SENAC
             {
                 Conexao.Conectar();
 
-                string sql = @"insert into Alunos (Alu_Nome, Alu_CPF, Alu_Email, Alu_Celular, Alu_DataNascimento, Alu_DataCadastro, Alu_CEP, Alu_Estado, Alu_Cidade, Alu_Rua, Alu_Numero, Alu_Complemento, Alu_Bairro)
-			                    values (@nome, @cpf, @email, @celular, @datanascimento, @datacadastro, @cep, @estado, @cidade, @rua, @numero, @complemento, @bairro)";
+  
+
+                string sql = @"insert into Alunos (Alu_CPF,Alu_Nome, Alu_Email, Alu_Celular, Alu_DataNascimento, Alu_DataCadastro, Alu_CEP, Alu_Estado, Alu_Cidade, Alu_Rua, Alu_Numero, Alu_Complemento, Alu_Bairro)
+			                    values (@cpf, @nome, @email, @celular, @datanascimento, @datacadastro, @cep, @estado, @cidade, @rua, @numero, @complemento, @bairro)";
                 SqlCommand cmd = new SqlCommand(sql, Conexao.conn);
                 cmd.Parameters.AddWithValue("nome", txtCadAluNome.Text);
                 cmd.Parameters.AddWithValue("cpf", mktCadAluCPF.Text);
@@ -632,7 +817,7 @@ namespace Projeto_Academia_SENAC
                 cmd.Parameters.AddWithValue("datanascimento", mktCadFunDataNasc.Text);
                 cmd.Parameters.AddWithValue("datainicio", mktCadFunDataInicio.Text);
                 cmd.Parameters.AddWithValue("cargo", cmbCadFunCargo.Text);
-                cmd.Parameters.AddWithValue("cep", mktCadAluCEP.Text);
+                cmd.Parameters.AddWithValue("cep", mktCadFunCEP.Text);
                 cmd.Parameters.AddWithValue("estado", cmbCadFunEstado.Text);
                 cmd.Parameters.AddWithValue("cidade", cmbCadFunCidade.Text);
                 cmd.Parameters.AddWithValue("rua", txtCadFunRua.Text);
@@ -727,6 +912,44 @@ namespace Projeto_Academia_SENAC
             {
                 Conexao.Fechar();
             }
+        }
+
+        private void btnCadFunAlterar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Conexao.Conectar();
+                string sql = @"UPDATE Alunos SET
+                      Alu_Nome = @NOME, Alu_Email = @EMAIL,
+                      Alu_Celular = @CELULAR, Alu_CPF = @CPF
+                      Alu_DataNascimento = @dataNASCIMENTO, Alu_DataCadastro = @dataCADASTRO,
+                      Alu_CEP = @CEP, Alu_Estado = @ESTADO,
+                      Alu_Cidade = @CIDADE, Alu_Rua = @RUA, Alu_Numero = @NUMERO, 
+                      Alu_Complemento = @COMPLEMENTO, Alu_Bairro = @BAIRRO,
+                      WHERE Alu_Id = @ID";
+                SqlCommand cmd = new SqlCommand(sql, Conexao.conn);
+                cmd.Parameters.AddWithValue("ID", Alunos.Codigo);
+                cmd.Parameters.AddWithValue("NOME", txtCadAluNome.Text);
+                cmd.Parameters.AddWithValue("EMAIL", txtCadAluEmail.Text);
+                cmd.Parameters.AddWithValue("CPF", mktCadAluCPF.Text);
+                cmd.Parameters.AddWithValue("CELULAR", mktCadAluCelular.Text);
+                cmd.Parameters.AddWithValue("dataNASCIMENTO", mktCadAluDataNasc.Text);
+                cmd.Parameters.AddWithValue("dataCADASTRO", mktCadAluDataCadastro.Text);
+                cmd.Parameters.AddWithValue("CEP", mktCadAluCEP.Text);
+                cmd.Parameters.AddWithValue("ESTADO", cmbCadAluEstado.Text);
+                cmd.Parameters.AddWithValue("CIDADE", cmbCadAluCidade.Text);
+                cmd.Parameters.AddWithValue("RUA", txtCadAluRua.Text);
+                cmd.Parameters.AddWithValue("NUMERO", txtCadAluNumero.Text);
+                cmd.Parameters.AddWithValue("COMPLEMENTO", txtCadAluComplemento.Text);
+                cmd.Parameters.AddWithValue("BAIRRO", txtCadAluBairro.Text);
+                // Adicionar imagem NULL ao banco de dados
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Erro: " + ex.Message);
+            }
+            
         }
     }
 }
