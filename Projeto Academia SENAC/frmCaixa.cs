@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace Projeto_Academia_SENAC
 {
@@ -68,9 +69,17 @@ namespace Projeto_Academia_SENAC
 
         private void btnCaiPesquisar_Click(object sender, EventArgs e)
         {
-            frmCaixaVisualizador outroform = new frmCaixaVisualizador();
-            this.Hide();
-            outroform.ShowDialog(); ;
+            if (mktCaiCPF.Text.Replace(",", "").Replace("-", "").Replace(" ", "") == "")
+            {
+                frmCaixaVisualizador outroform = new frmCaixaVisualizador();
+                this.Hide();
+                outroform.ShowDialog(); ;
+            }
+            else
+            {
+                PesquisaAlunos(mktCaiCPF.Text);
+            }
+            
         }
 
         private void btnCaiClose_Click(object sender, EventArgs e)
@@ -91,6 +100,35 @@ namespace Projeto_Academia_SENAC
         {
             // Lógica de registro aqui
             
+        }
+
+        private void PesquisaAlunos(string codigo)
+        {
+
+            if (!string.IsNullOrEmpty(codigo))
+            {
+                Conexao.Conectar();
+                string query = "SELECT * from Alunos WHERE Alu_CPF = @cpf";
+
+                using (SqlCommand command = new SqlCommand(query, Conexao.conn))
+                {
+                    command.Parameters.AddWithValue("@cpf", codigo);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            PreencherAlu(reader);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PreencherAlu(SqlDataReader reader)
+        {
+            txtCaiNome.Text = reader["Alu_Nome"].ToString();
+            txtCaiCodigo.Text = reader["Alu_Id"].ToString();
         }
     }
 }

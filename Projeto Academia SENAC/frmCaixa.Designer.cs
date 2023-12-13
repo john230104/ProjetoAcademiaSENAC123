@@ -468,6 +468,7 @@
             // mktCaiCPF
             // 
             this.mktCaiCPF.Location = new System.Drawing.Point(488, 34);
+            this.mktCaiCPF.Mask = "000.000.000-00";
             this.mktCaiCPF.Name = "mktCaiCPF";
             this.mktCaiCPF.Size = new System.Drawing.Size(165, 20);
             this.mktCaiCPF.TabIndex = 3;

@@ -321,6 +321,7 @@ namespace Projeto_Academia_SENAC
             txtCadAluBairro.Text = reader["Alu_Bairro"].ToString();
             cmbCadAluCidade.Text = reader["Alu_Cidade"].ToString();
             cmbCadAluEstado.Text = reader["Alu_Estado"].ToString();
+            Alunos.Codigo = reader["Alu_Id"].ToString();
         }
 
         private void PreencherFuncionarios(SqlDataReader reader)
@@ -885,7 +886,42 @@ namespace Projeto_Academia_SENAC
 
         private void btnCadAluAlterar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Conexao.Conectar();
+                string sql = @"UPDATE Alunos SET
+                      Alu_Nome = @NOME, Alu_Email = @EMAIL,
+                      Alu_Celular = @CELULAR,
+                      Alu_DataCadastro = @dataCADASTRO, Alu_DataNascimento = @DATANASC, 
+                      Alu_CEP = @CEP, Alu_Estado = @ESTADO,
+                      Alu_Cidade = @CIDADE, Alu_Rua = @RUA, Alu_Numero = @NUMERO, 
+                      Alu_Complemento = @COMPLEMENTO, Alu_Bairro = @BAIRRO
+                      WHERE Alu_Id = @ID";
+                SqlCommand cmd = new SqlCommand(sql, Conexao.conn);
+                cmd.Parameters.AddWithValue("NOME", txtCadAluNome.Text);
+                cmd.Parameters.AddWithValue("EMAIL", txtCadAluEmail.Text);
+                cmd.Parameters.AddWithValue("ID", Alunos.Codigo);
+                cmd.Parameters.AddWithValue("CELULAR", mktCadAluCelular.Text);
+                cmd.Parameters.AddWithValue("DATANASC", mktCadAluDataNasc.Text);
+                cmd.Parameters.AddWithValue("dataCADASTRO", mktCadAluDataCadastro.Text);
+                cmd.Parameters.AddWithValue("CEP", mktCadAluCEP.Text);
+                cmd.Parameters.AddWithValue("ESTADO", cmbCadAluEstado.Text);
+                cmd.Parameters.AddWithValue("CIDADE", cmbCadAluCidade.Text);
+                cmd.Parameters.AddWithValue("RUA", txtCadAluRua.Text);
+                cmd.Parameters.AddWithValue("NUMERO", txtCadAluNumero.Text);
+                cmd.Parameters.AddWithValue("COMPLEMENTO", txtCadAluComplemento.Text);
+                cmd.Parameters.AddWithValue("BAIRRO", txtCadAluBairro.Text);
 
+
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Aluno Alterado Com Sucesso!");
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Erro: " + ex.Message);
+            }
         }
 
         private void btnCadAluApagar_Click(object sender, EventArgs e)
@@ -894,14 +930,13 @@ namespace Projeto_Academia_SENAC
             {
                 Conexao.Conectar();
                 string sql = @"DELETE FROM Alunos
-                      WHERE CODIGO = @CODIGO";
+                      WHERE Alu_Id = @ID";
                 SqlCommand cmd = new SqlCommand(sql, Conexao.conn);
-                cmd.Parameters.AddWithValue("CODIGO", Alunos.Codigo);
+                cmd.Parameters.AddWithValue("ID", Alunos.Codigo);
                 cmd.ExecuteNonQuery();
 
                 MessageBox.Show("Aluno excluído com sucesso!");
 
-                //Utils.limparCampos(this);
             }
             catch (Exception ex)
             {
